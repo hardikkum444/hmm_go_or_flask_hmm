@@ -2,14 +2,14 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-#Demostrating a Get request
-@app.route("/get-user/<user_id>") #using a path parameter
+# Demostrating a Get request
+@app.route("/get-user/<user_id>") # using a path parameter
 def get_user(user_id):
 
     user_data = {
         "user_id": user_id,
-        "name": "Hardik Kumawat",
-        "email": "kumawat.hardik@gmail.com"
+        "name": "Banana Man",
+        "email": "man.banana@gmail.com"
     }
 
     extra = request.args.get("extra")
@@ -19,7 +19,7 @@ def get_user(user_id):
 
     return jsonify(user_data), 200
 
-#Demonstrating a POST request
+# Demonstrating a POST request
 @app.route("/create-user", methods=["POST"])
 def create_user():
 
