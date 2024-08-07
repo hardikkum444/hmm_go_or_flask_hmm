@@ -1,0 +1,97 @@
+/* Reset some default styles */
+body,
+h1,
+form,
+.links {
+    margin: 0;
+    padding: 0;
+}
+
+/* Apply a pixel-like font */
+body {
+    background-image: url("man.gif");
+    background-repeat: no-repeat;
+    background-position: 200px 50px;
+    background-size: 40%;
+    font-family: "Courier New", Courier, monospace;
+    background-color: #f4f4f4; /* Light gray background */
+    color: #333; /* Dark text color for contrast */
+    text-align: center; /* Center-align the form and links */
+    line-height: 1.5;
+
+    /* Flexbox layout to center content vertically and horizontally */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    min-height: 100vh; /* Full viewport height */
+    margin-right: -90px;
+}
+
+h1 {
+    margin: 40px 0 20px 0; /* Add space above and below the header */
+    font-size: 24px;
+    color: #222; /* Slightly darker text for the header */
+    background-color: #f2f2f2;
+}
+
+/* Style the form container */
+form {
+    display: inline-block; /* Center form horizontally */
+    background-color: #f2f2f2; /* White background for the form
+    /* background-color: #333; */
+    padding: 20px;
+    border: 1px solid #ddd; /* Light border for the form */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin: 20px auto; /* Center the form vertically and horizontally */
+    width: 300px; /* Fixed width for the form */
+    text-align: left; /* Align text and inputs to the left within the form */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* Full width of the form */
+    padding: 10px;
+    margin-bottom: 10px; /* Space between fields */
+    border: 1px solid #ccc; /* Light border for the fields */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+input[type="submit"] {
+    background-color: #007bff; /* Blue button background */
+    color: #fff; /* White text color */
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Style links */
+a {
+    color: #007bff; /* Blue color for links */
+    text-decoration: none; /* Remove underline from links */
+    font-size: 14px;
+}
+
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Style the links container */
+.links {
+    margin-top: 20px;
+}
+
+.links a {
+    display: block; /* Make each link occupy its own line */
+    margin: 5px 0; /* Space between links */
+}
