@@ -24,6 +24,12 @@
 # if __name__ == "__main__":
 #     app.run(debug=True)
 
+#-------------------------------------------------------------------
+
+# Its important to set headers as key-> content-type value-> application/json
+# For doing that make sure the payload you are sending via postman is in json format
+# curl req should look like -> curl -X PUT -H "Content-Type: application/json" -d '{"name": "Sample Video", "views": 1234, "likes": 567}' http://localhost:5000/video/1
+
 from typing_extensions import Required
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort
