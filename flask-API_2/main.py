@@ -30,6 +30,7 @@
 # For doing that make sure the payload you are sending via postman is in json format
 # curl req should look like -> curl -X PUT -H "Content-Type: application/json" -d '{"name": "Sample Video", "views": 1234, "likes": 567}' http://localhost:5000/video/1
 
+from flask.json import jsonify
 from typing_extensions import Required
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort
@@ -64,6 +65,11 @@ class Video(Resource):
         args = video_put_args.parse_args()
         videos[id] = args
         return videos[id], 201
+
+    def delete(self, id):
+        abort_if_not_exist(id)
+        del videos[id]
+        return "Deleted Successfuly", 204 #204->deleted successfully
 
 api.add_resource(Video,"/video/<int:id>")
 
