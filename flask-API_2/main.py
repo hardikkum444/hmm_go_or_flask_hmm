@@ -49,12 +49,16 @@ class VideoModel(db.Model):
     def __repr__(self):
         return f"Video(name = {self.name}, views = {self.views}, likes = {self.likes})"
 
-
-
 video_put_args = reqparse.RequestParser()
 video_put_args.add_argument("name", type=str, help="Name of the Video is required", required=True)
 video_put_args.add_argument("views", type=int, help="Views on the Video are required", required=True)
 video_put_args.add_argument("likes", type=int, help="Likes on the Video are required", required=True)
+
+video_update_args = reqparse.RequestParser()
+video_update_args.add_argument("name", type=str, help="Name of the Video is required")
+video_update_args.add_argument("views", type=int, help="Views on the Video are required")
+video_update_args.add_argument("likes", type=int, help="Likes on the Video are required")
+
 
 resource_fields = {
     'id': fields.Integer,
@@ -67,6 +71,8 @@ class Video(Resource):
     @marshal_with(resource_fields) # so that return thingy gets serialised
     def get(self, id):
         result = VideoModel.query.filter_by(id=id).first() # using filter by id and displying the 'first' result, you can also use 'all''
+        if not result:
+            abort(404,message="Video ID does not exist")
         return result
 
     @marshal_with(resource_fields) # so that return thingy gets serialised
@@ -79,6 +85,24 @@ class Video(Resource):
         db.session.add(video)
         db.session.commit()
         return video, 201
+
+    @marshal_with(resource_fields)
+    def patch(self, id):
+        args = video_update_args.parse_args()
+        result = VideoModel.query.filter_by(id=id).first()
+        if not result:
+            abort(404, message="Video ID does not exist")
+
+        if args['name']: # automatically checks if it aint none
+            result.name = args['name']
+        if args['views']:
+            result.views = args['views']
+        if args['likes']:
+            result.likes = args['likes']
+
+        db.session.commit() # no need of db.session.add when patching
+
+        return result
 
     def delete(self, id):
         abort_if_not_exist(id)
