@@ -47,7 +47,7 @@ class VideoModel(db.Model):
     likes = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"Video(name = {name}, views = {views}, likes = {likes})"
+        return f"Video(name = {self.name}, views = {self.views}, likes = {self.likes})"
 
 
 
@@ -64,16 +64,21 @@ resource_fields = {
 }
 
 class Video(Resource):
-    @marshal_with(resource_fields)
-    def get(self, video_id):
-        result = VideoModel.query.get(video_id)
+    @marshal_with(resource_fields) # so that return thingy gets serialised
+    def get(self, id):
+        result = VideoModel.query.filter_by(id=id).first() # using filter by id and displying the 'first' result, you can also use 'all''
         return result
 
+    @marshal_with(resource_fields) # so that return thingy gets serialised
     def put(self, id):
-        abort_if_exist(id)
         args = video_put_args.parse_args()
-        videos[id] = args
-        return videos[id], 201
+        result = VideoModel.query.filter_by(id=id).first() # to check if video already exists or not
+        if result:
+            abort(409, message="Video ID already exists")
+        video = VideoModel(id = id, name = args['name'], views = args['views'], likes = args['likes'])
+        db.session.add(video)
+        db.session.commit()
+        return video, 201
 
     def delete(self, id):
         abort_if_not_exist(id)
