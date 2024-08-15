@@ -30,35 +30,44 @@
 # For doing that make sure the payload you are sending via postman is in json format
 # curl req should look like -> curl -X PUT -H "Content-Type: application/json" -d '{"name": "Sample Video", "views": 1234, "likes": 567}' http://localhost:5000/video/1
 
-from flask.json import jsonify
-from typing_extensions import Required
 from flask import Flask
-from flask_restful import Api, Resource, reqparse, abort
+from flask_restful import Api, Resource, reqparse, abort, fields, marshal_with
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
+
+class VideoModel(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    views = db.Column(db.Integer, nullable=False)
+    likes = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"Video(name = {name}, views = {views}, likes = {likes})"
+
+
 
 video_put_args = reqparse.RequestParser()
 video_put_args.add_argument("name", type=str, help="Name of the Video is required", required=True)
 video_put_args.add_argument("views", type=int, help="Views on the Video are required", required=True)
 video_put_args.add_argument("likes", type=int, help="Likes on the Video are required", required=True)
 
-videos = {
+resource_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'views': fields.Integer,
+    'likes': fields.Integer
 }
 
-def abort_if_not_exist(id):
-    if id not in videos:
-        abort(404, message="Video ID does not exist")
-
-def abort_if_exist(id):
-    if id in videos:
-        abort(409, message="Video ID already exists")
-
 class Video(Resource):
-
-    def get(self, id):
-        abort_if_not_exist(id)
-        return videos[id]
+    @marshal_with(resource_fields)
+    def get(self, video_id):
+        result = VideoModel.query.get(video_id)
+        return result
 
     def put(self, id):
         abort_if_exist(id)
@@ -69,7 +78,7 @@ class Video(Resource):
     def delete(self, id):
         abort_if_not_exist(id)
         del videos[id]
-        return "Deleted Successfuly", 204 #204->deleted successfully
+        return "Deleted Successfuly", 204 # 204 -> deleted successfully
 
 api.add_resource(Video,"/video/<int:id>")
 
