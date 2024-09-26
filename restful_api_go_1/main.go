@@ -2,10 +2,10 @@ package main
 
 import (
     "net/http"
-
     "github.com/gin-gonic/gin"
 )
 
+// creating a struct where man defines the structure of the db (in this case json)
 type album struct {
     ID      string `json:"id"`
     Title   string `json:"title"`
@@ -20,12 +20,30 @@ var albums = []album{
 }
 
 func getAlbums(c *gin.Context) {
+    // response to the get req man shall recieve
     c.IndentedJSON(http.StatusOK, albums)
+}
+
+func postAlbums(c *gin.Context) {
+    var newAlbum album
+    
+    // binding post body to newAlbum
+    if err := c.BindJSON(&newAlbum); err !=nil {
+        return
+    }
+
+    albums = append(albums, newAlbum)
+    
+    // response to the post req that man shall recieve 
+    c.IndentedJSON(http.StatusCreated, newAlbum)
 }
 
 func main() {
     router := gin.Default()
+    
+    // like @app.route
     router.GET("/albums", getAlbums)
-
+    router.POST("/albums", postAlbums)
+    
     router.Run("localhost:8000")
 }
