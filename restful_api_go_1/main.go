@@ -1,3 +1,9 @@
+// c *gin.Context is a pointer to a gin.Context object. This object contains information about the HTTP request and response
+
+// when passing *gin.Context we are passing by ref which means we aint passing a copy we are passing the actual thing, any modifications will modify the actual thing
+
+// The gin.Context object contains all the information about the current HTTP request and response.
+
 package main
 
 import (
@@ -13,6 +19,7 @@ type album struct {
     Price   float64 `json:"price"`
 }
 
+// this is a slice or an array as man would call it
 var albums = []album{
     {ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
     {ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
@@ -27,7 +34,7 @@ func getAlbums(c *gin.Context) {
 func postAlbums(c *gin.Context) {
     var newAlbum album
     
-    // binding post body to newAlbum
+    // binding post body to newAlbum from the c (context) in json format
     if err := c.BindJSON(&newAlbum); err !=nil {
         return
     }
@@ -35,7 +42,7 @@ func postAlbums(c *gin.Context) {
     albums = append(albums, newAlbum)
     
     // response to the post req that man shall recieve 
-    c.IndentedJSON(http.StatusCreated, newAlbum)
+    c.IndentedJSON(http.StatusCreated, gin.H{"message": "item succesfully added"})
 }
 
 func main() {
