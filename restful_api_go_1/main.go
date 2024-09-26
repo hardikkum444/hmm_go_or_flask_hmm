@@ -34,8 +34,9 @@ func getAlbums(c *gin.Context) {
 func postAlbums(c *gin.Context) {
     var newAlbum album
     
-    // binding post body to newAlbum from the c (context) in json format
+    // binding using json format and checking if valid with no process errors
     if err := c.BindJSON(&newAlbum); err !=nil {
+        c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid request/format"})
         return
     }
 
